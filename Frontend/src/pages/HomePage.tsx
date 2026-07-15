@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Textarea } from "../components/ui/textarea";
 import { SendHorizontalIcon } from "lucide-react";
+import ReactMarkdow from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { string } from "zod";
+import vs2015  from "react-syntax-highlighter/dist/esm/styles/prism/atom-dark";
+import { Button } from "@base-ui/react";
 
 
 
@@ -105,14 +110,15 @@ export default function Home() {
                             }
                         }}
                         className="flex-1 resize-none min-h-[80px] max-h-[200px] rounded-md border border-input bg-muted/30" 
-                        >
-                        <button
+                        />
+                        
+                        <button type="button"
                         onClick={handleSend}
                         className="p-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition"
                         >
                             <SendHorizontalIcon size={28} className="cursor-pointer"/>
                         </button>
-                        </Textarea>
+                        
                     </div>
                 </div>
             </div>
