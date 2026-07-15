@@ -97,30 +97,36 @@ export default function Home() {
                 </div>
 
                 {/* Input */}
-                <div className="border-t p-4 sticky bottom-0 z-50 bg-background text-foreground">
-                    <div className="max-w-2xl mx-auto flex items-center gap-4">
-                        <Textarea
-                        placeholder="Send a message..."
-                        value={input}
-                        onChange={(e)=>setInput(e.target.value)}
-                        onKeyDown={(e)=>{
-                            if (e.key === "Enter" && !e.shiftKey){
-                                e.preventDefault();
-                                handleSend();
-                            }
-                        }}
-                        className="flex-1 resize-none min-h-[80px] max-h-[200px] rounded-md border border-input bg-muted/30" 
-                        />
-                        
-                        <button type="button"
-                        onClick={handleSend}
-                        className="p-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition"
-                        >
-                            <SendHorizontalIcon size={28} className="cursor-pointer"/>
-                        </button>
-                        
-                    </div>
-                </div>
+                <div className="border-t p-4 sticky bottom-0 bg-background">
+  <div className="max-w-2xl mx-auto">
+
+    <div className="relative">
+
+      <Textarea
+        placeholder="Send a message..."
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+          }
+        }}
+        className="pr-16 min-h-[80px] resize-none"
+      />
+
+      <button
+        type="button"
+        onClick={handleSend}
+        className="absolute bottom-3 right-3 p-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+      >
+        <SendHorizontalIcon size={20} />
+      </button>
+
+    </div>
+
+  </div>
+</div>
             </div>
         </div>
     )
