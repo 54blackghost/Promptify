@@ -48,7 +48,7 @@ def prompt_gpt(request):
     chat.title = createChatTitle(content)
     chat.save()
 
-    chat_message = ChatMessage.objects.create(role='user', chat=chat, content=content)
+    ChatMessage.objects.create(role='user', chat=chat, content=content)
 
     chat_messages = chat.messages.order_by('created_at')[:10] 
 

@@ -6,23 +6,33 @@ import ReactMarkdow from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { string } from "zod";
 import vs2015  from "react-syntax-highlighter/dist/esm/styles/prism/atom-dark";
-import { Button } from "@base-ui/react";
+
 
 
 
 
 export default function Home() {
-        const location = useLocation();
-        const navigate = useNavigate()
+    const location = useLocation();
+    const navigate = useNavigate()
+    const [input, setInput] = useState("");
+    const  [ chatID, setChatID]= useState(" ");
+    const {chat_uid } = useParams();
 
-        const  [ chatSessionId, setChatSessionId]= useState<null | string>(null)
-        const {chatId } = useParams()
+
+
+    useEffect(()=>{
+        if(chat_uid){
+            setChatID(chat_uid);
+        }else{
+            setChatID(crypto.randomUUID());
+        }  
+    },[chat_uid]);
     
     const [messages, setMessages] = useState([
         {role: 'assistant', content:"Welcome! I'm here to assist you"}
     ]);
 
-    const [input, setInput] = useState("");
+    
 
     const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -33,21 +43,17 @@ export default function Home() {
     const handleSend = () => {
         if(!input.trim()) return;
 
-        if(location.pathname=="/" || location.pathname == "/chats/new"){
-            navigate("/chats/chat_id")
+        if(location.pathname == "/" || location.pathname == "/chats/new"){
+            navigate(`chats/${chatID}`);
         }
 
         const newMessage = { role: 'user', content: input};
-        const dummyReply = {
-            role: 'assistant',
-            content: 'This is a dummy response. Replace this with actual API logic',
-        };
+    
         setMessages((prev) => 
-        [...prev, newMessage, dummyReply].filter(
-          (p) => p.content != "Welcome1 I'm here to assist you."  
-        ));
-
-        //setMessages((prev) => [...prev, newMessage, dummyReplay])
+            [...prev, newMessage].filter(
+            (p) => p.content != "Welcome I'm here to assist you."  
+            )
+        );
         setInput("");
     };
 
@@ -59,36 +65,36 @@ export default function Home() {
                     { messages.map((msg, idx) =>
                        msg.role === 'user ' ? (
                         <div
-                        key={idx} 
-                        className="w-full mx-auto p-4 rounded-xl bg-primary text-primary-foreground self-end">
+                            key={idx} 
+                            className="w-full mx-auto p-4 rounded-xl bg-primary text-primary-foreground self-end">
                             {msg.content}
                         </div>
-                       ) : (
+                        ) : (
                         <div 
-                        key={idx}
-                        className="prose dar:prose-invert max-w-none bg-muted text-foreground p-4 rounded-lg shadow mb">
+                            key={idx}
+                            className="prose dar:prose-invert max-w-none bg-muted text-foreground p-4 rounded-lg shadow mb">
                             <ReactMarkdow
-                            components={{
-                                code({ inline, className, children }) {
-                                    const match = /language-{\w+}/.exec(className || '');
-                                    return !inline && match ? (
-                                        <SyntaxHighlighter
-                                        style={vs2015}
-                                        language={match[1]}
-                                        PreTag='div'
-                                        className='rounded-md'
-                                        >
-                                            {string(children).replace(/\n$/, "")}
-                                        </SyntaxHighlighter>
-                                    ) : (
-                                       <code className="bg-muted rounded px-1 py-0.5 text-sm">
-                                            {children}
-                                       </code> 
-                                    );
-                                },
-                            }}
+                                components={{
+                                    code({ inline, className, children }) {
+                                        const match = /language-{\w+}/.exec(className || '');
+                                        return !inline && match ? (
+                                            <SyntaxHighlighter
+                                            style={vs2015}
+                                            language={match[1]}
+                                            PreTag='div'
+                                            className='rounded-md'
+                                            >
+                                                {String(children).replace(/\n$/, "")}
+                                            </SyntaxHighlighter>
+                                        ) : (
+                                        <code className="bg-muted rounded px-1 py-0.5 text-sm">
+                                                {children}
+                                        </code> 
+                                        );
+                                    },
+                                }}
                             >
-                                {msg.content}
+                            {msg.content}
                             </ReactMarkdow>
                         </div>
                        )
@@ -97,41 +103,29 @@ export default function Home() {
                 </div>
 
                 {/* Input */}
-                <div className="border-t p-4 sticky bottom-0 bg-background">
-  <div className="max-w-2xl mx-auto">
-
-    <div className="relative">
-
-      <Textarea
-        placeholder="Send a message..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
-          }
-        }}
-        className="pr-16 min-h-[80px] resize-none"
-      />
-
-      <button
-        type="button"
-        onClick={handleSend}
-        className="absolute bottom-3 right-3 p-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-      >
-        <SendHorizontalIcon size={20} />
-      </button>
-
-    </div>
-
-  </div>
-</div>
+                <div className="border-t p-4 sticky bottom-0 bg-background text-foreground">
+                    <div className="max-w-2xl mx-auto flex items-center gap-4">
+                            <Textarea
+                                placeholder="Send a message..."
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleSend();
+                                }
+                                }}
+                                className="flex-1 resize-none min-h-\[80px] max-h-\[200px] rounded-md border border-input bg-muted/50"
+                            />
+                        <button
+                                onClick={handleSend}
+                                className="p-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90  transition"
+                            >
+                                <SendHorizontalIcon size={20} className="cursor-pointer"/>
+                            </button>
+                    </div>
+                </div> 
             </div>
         </div>
-    )
-
-
-
-
+    );
 }

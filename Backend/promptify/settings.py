@@ -43,11 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'promptify_app',
     'rest_framework',
+    # Third-party apps
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -73,6 +76,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'promptify.wsgi.application'
+# settings/development.py
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React development server
+    "http://localhost:5173",  # Vue development server
+    "http://127.0.0.1:3000",  # Alternative localhost format
+]
 
 
 # Database
@@ -127,3 +136,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'promptify_app.CustomUser'
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
